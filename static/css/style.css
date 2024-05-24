@@ -1,0 +1,260 @@
+/* Autor: Lucas Freire */
+/*© 2024 Todos os direitos reservados. */
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo para o body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Estilo para o container principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilo para o logotipo */
+.logo {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+/* Estilo para o título */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilo para os formulários */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para os grupos de formulário */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Estilo para os rótulos dos campos de formulário */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Estilo para os campos de entrada de arquivo */
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    width: 50%;
+}
+
+/* Estilo para os menus de seleção */
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    width: 50%;
+}
+
+/* Estilo para os botões */
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+/* Estilo de hover para os botões */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para as mensagens de feedback */
+.message {
+    color: green;
+    margin-top: 20px;
+}
+
+/* Estilo para os itens de menu */
+.menu-item {
+    margin-top: 30px;
+}
+
+/* Estilo para o rodapé */  
+footer {
+    margin-top: 30px;
+    color: #4a4a4a;
+    font-size: 14px;
+}
+
+/* Estilo para o balão de instruções */
+.instructions {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.instructions p {
+    margin-bottom: 10px;
+}
+
+.instructions ul {
+    list-style-type: none;
+}
+
+.instructions ul li {
+    margin-bottom: 5px;
+}
+
+/* Estilo para a tela de carregamento */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.loading-animation {
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* Estilo para a porcentagem de progresso */
+.progress {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #8b8b8b;
+    position: absolute;
+}
+
+.note {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.consultation-button {
+    display: inline-block;
+    padding: 4px 13px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 15px;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.consultation-button:hover {
+    background-color: #0056b3;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.file-upload {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.file-upload input[type='file'] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.file-custom {
+    padding: 5px 35px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-custom:hover {
+    background-color: #0056b3;
+}
+
+.note {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.secondary-footer {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    font-size: 12px;
+    border-top: 1px solid #ccc;
+}
+/* Estilos para o balão de mensagem */
+.balloon {
+    transition: opacity 0.6s ease-in-out;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: none;
+    z-index: 999;
+}
+
+.warning-balloon {
+    background-color: #e41818;
+}
+
+.warning1-balloon {
+    background-color: #FF9800;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Lucas Freire">
+    <meta name="description" content="Automação para gerar cartas de forma rapida utilizando o excel">
+    <meta name="keywords" content="Banco de cartas, gerador de cartas">
+    <meta name="copyright" content="© 2024 Todos os direitos reservados. Desenvolvido por Lucas Freire" />
+    
+    <link rel="icon" href="{{ url_for('static', filename='img/logo_titulo.png') }}" type="image/png">
+    <title>Banco de Cartas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}" type="text/css">
+    
+    <script async>
+        function showMessage(message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerText = message;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 6000); 
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault(); 
+            showLoadingAnimation(); 
+            
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+            })
+            .then(response => {
+                hideLoadingAnimation(); 
+                if (response.ok) {
+                    const contentDisposition = response.headers.get('Content-Disposition');
+                    const filename = contentDisposition.split('filename=')[1].trim();
+                    response.blob().then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a); 
+                        a.click();
+                        a.remove();
+                        showDownloadAnimation(); 
+                        showMessage('Cartas preenchidas com sucesso!');
+                    });
+                } else {
+                    showWarningMessage('Erro ao gerar as cartas. Favor seguir as instruções.');
+                }
+            })
+            .catch(() => {
+                hideLoadingAnimation(); 
+                showWarningMessage('Erro ao enviar formulário.');
+            });
+        }
+
+        function handleTemplateChange(event) {
+            const selectedTemplate = event.target.value;
+            if (selectedTemplate >= 'modelo5' && selectedTemplate <= 'modelo8') {
+                showWarningMessage1('Atenção: O modelo importado deverá conter somente as informações da Rede.');
+            }
+        }
+
+        function showWarningMessage(message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerText = message;
+            messageDiv.classList.add('warning-balloon');
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+                messageDiv.classList.remove('warning-balloon');
+            }, 6000); 
+        }
+
+        function showWarningMessage1(message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerText = message;
+            messageDiv.classList.add('warning1-balloon');
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+                messageDiv.classList.remove('warning1-balloon');
+            }, 6000); 
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', handleFormSubmit);
+
+            const templateSelect = document.getElementById('word_template');
+            templateSelect.addEventListener('change', handleTemplateChange);
+        });
+
+        function showLoadingAnimation() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+        }
+
+        function hideLoadingAnimation() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'none';
+        }
+
+        function showDownloadAnimation() {
+            const progress = document.getElementById('progress');
+            progress.style.display = 'block';
+        
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += 2;
+                progress.textContent = percent + '%';
+                if (percent >= 100) {
+                    clearInterval(interval);
+                    progress.style.display = 'none';
+                }
+            }, 100);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='img/logo_workon.png') }}" alt="Logo" class="logo">
+        <h1>Novo Banco de Cartas</h1>
+        
+        
+        <div class="balloon" id="message" role="alert"></div>
+
+        
+        <div class="instructions">
+            <p>Para gerar as cartas, siga estes passos:</p>
+            <ul>
+                <li>1° Selecione um arquivo Excel contendo os dados necessários (Conforme Template).</li>
+                <li>2° Escolha o modelo de carta adequada e carimbo da empresa.</li>
+                <li>3° Clique no botão "Gerar".</li>
+                <li>Após o carregamento, os arquivos serão salvo com nome do colaborador(a) e nome do PDV.</li>
+            </ul>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" action="/">
+            <div class="form-group">
+                <label for="excel_file">Selecione o arquivo Excel:</label>
+                <input type="file" name="excel_file" id="excel_file" accept=".xlsx" aria-describedby="fileHelp">
+                <p class="note" id="fileHelp">Observação: o arquivo deve estar no formato .xlsx</p>
+            </div>
+            <div class="form-group">
+                <label for="word_template">Escolha o modelo de carta e carimbo:</label>
+                <select name="word_template" id="word_template">
+                    <option value="modelo1">Modelo Comum - S/ Carimbo</option>
+                    <option value="modelo2">Modelo Comum - Smart Trade</option>
+                    <option value="modelo3">Modelo Comum - On Job</option>
+                    <option value="modelo4">Modelo Comum - Work On People</option>
+                    <option value="modelo5">Modelo Atacadão - S/ Carimbo</option>
+                    <option value="modelo6">Modelo Atacadão - Smart Trade</option>
+                    <option value="modelo7">Modelo Atacadão - On Job</option>
+                    <option value="modelo8">Modelo Atacadão - Work On People</option>
+                </select>
+            </div>
+            <button type="submit">Gerar</button>
+        </form>
+
+        <div class="menu-item">
+            <a href="{{ url_for('static', filename='path/to/your/Modelo Para Preencher_Banco de Cartas.xlsx') }}" class="consultation-button" target="_blank">Baixar template</a>
+        </div>
+        <footer class="secondary-footer">
+            © 2024 Todos os direitos reservados.
+            Desenvolvido por <a href="https://www.linkedin.com/in/lucas-freire19" target="_blank">Lucas Freire.
+        </footer>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+        <div class="loading-animation" role="progressbar" aria-label="Carregando"></div>
+        <div id="progress" class="progress" style="display: none;">0%</div>
+    </div>
+</body>
+</html>
